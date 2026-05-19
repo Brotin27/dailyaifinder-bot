@@ -1,0 +1,43 @@
+## General AI/Tech Blog Post Template
+
+Write a comprehensive, well-researched blog article on the given topic. Follow this structure:
+
+### Section 1: Hook Introduction
+- Open with a surprising statistic, bold claim, or relatable scenario
+- Clearly state what the reader will learn from this article
+- Keep it to 2-3 short paragraphs
+
+### Section 2: Background / Why This Matters
+- Provide context on why this topic is relevant right now
+- Include recent developments or news
+- Reference real data or industry reports
+
+### Section 3: Main Content (Core Sections)
+- Break the topic into 4-6 logical subtopics using H2 headings
+- Each section should have:
+  - Clear explanation with examples
+  - Practical advice or actionable takeaways
+  - Supporting evidence (statistics, expert quotes, case studies)
+- Use tables for any comparative data
+- Use bullet/numbered lists for step-by-step instructions or lists
+
+### Section 4: Expert Tips / Pro Advice
+- Share 3-5 actionable tips that add genuine value
+- Format as a numbered list with bold tip headers
+- Each tip should include WHY it works, not just WHAT to do
+
+### Section 5: Common Mistakes to Avoid
+- List 3-4 pitfalls with explanations
+- This section builds trust and demonstrates expertise
+
+### Section 6: Future Outlook
+- Brief section on where this topic/technology is headed
+- Include predictions backed by current trends
+
+### Section 7: Conclusion
+- Summarize the 3 most important takeaways
+- End with a thought-provoking question or call to action
+
+### Section 8: FAQ
+- 4-5 frequently asked questions related to the topic
+- Concise, helpful answers

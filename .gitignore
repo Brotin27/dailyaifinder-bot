@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+data/api_keys.json
+data/drafts.json
+data/affiliate_links.json
+data/pending_affiliates.json
+*.egg-info/
+dist/
+build/
+.venv/
+venv/

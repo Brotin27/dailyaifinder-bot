@@ -1,0 +1,53 @@
+## SaaS/AI Tool Review Article Template
+
+Write a comprehensive, honest review article for the given tool. Follow this exact structure:
+
+### Section 1: Hook Introduction
+- Start with a relatable problem that the tool solves
+- Mention the tool name naturally within the first 2 sentences
+- Include a brief "what you'll learn" teaser
+- End with a CTA link to the tool
+
+### Section 2: What is [Tool Name]?
+- One clear paragraph explaining what the tool does
+- Who built it (company/team background if available)
+- What category it falls into (AI writing, design, automation, etc.)
+
+### Section 3: Key Features (Detailed Breakdown)
+- List 5-8 major features with H3 subheadings
+- For each feature: explain what it does, why it matters, and how it compares
+- Use specific examples where possible
+
+### Section 4: Pricing & Plans
+- Create an HTML table with all pricing tiers
+- Include: Plan name, Price, Key features included, Best for
+- Mention free trial/freemium if available
+- Note any hidden costs or limitations
+
+### Section 5: Pros and Cons
+- Use a clean two-column layout or two separate lists
+- At least 5 genuine pros with brief explanations
+- At least 3 honest cons — readers trust honesty
+- Mark each with ✅ or ❌ emoji
+
+### Section 6: Real-World Use Cases
+- Describe 3-4 specific scenarios where this tool shines
+- Use "If you're a [role]..." format for relatability
+
+### Section 7: How It Compares to Alternatives
+- Brief comparison table with 2-3 top competitors
+- Highlight where this tool wins AND where competitors are better
+
+### Section 8: Who Should (and Shouldn't) Use This Tool?
+- Clear "Best for:" bullet list
+- Clear "Not ideal for:" bullet list
+
+### Section 9: Final Verdict
+- Summarize your honest assessment in 2-3 paragraphs
+- Give a rating (X/10) with brief justification
+- Strong CTA with affiliate link
+
+### Section 10: FAQ
+- 5-6 frequently asked questions with concise answers
+- Format as H3 questions with paragraph answers
+- Include common queries like pricing, alternatives, free trial
