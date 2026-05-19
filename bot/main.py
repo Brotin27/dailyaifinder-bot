@@ -4,10 +4,17 @@ Starts the Telegram bot in polling mode (for local/VPS) or webhook mode (for Her
 """
 import os
 import sys
+import asyncio
 import logging
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Python 3.14+ no longer auto-creates an event loop — create one explicitly
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 
 from telegram.ext import (
     ApplicationBuilder,
