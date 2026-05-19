@@ -1,14 +1,14 @@
 """
 AI Image Generator
-- Generates custom featured images using Gemini Imagen 3
+- Generates custom featured images using Gemini 2.5 Flash native image generation
 - Falls back to Unsplash stock images for in-article illustrations
 """
 import io
 import logging
+import base64
 from typing import Optional
 
 from google.genai import types
-from PIL import Image
 
 import config
 from services.key_manager import key_manager
@@ -21,8 +21,8 @@ async def generate_featured_image(
     article_title: str,
     tool_name: str = "",
 ) -> Optional[bytes]:
-    """Generate a custom featured image using Gemini Imagen 3.
-    
+    """Generate a custom featured image using Gemini 2.5 Flash native image gen.
+
     Returns PNG image bytes or None on failure.
     """
     client = key_manager.get_genai_client()
@@ -30,39 +30,33 @@ async def generate_featured_image(
         logger.error("No API key available for image generation.")
         return None
 
-    # Build a creative prompt for a premium blog thumbnail
-    image_prompt = f"""Create a premium, modern blog article featured image/thumbnail for the following:
-
-Title: "{article_title}"
-{f'Tool/Brand: {tool_name}' if tool_name else ''}
-
-Style Requirements:
-- Clean, professional, premium tech blog aesthetic
-- Modern 3D render style with soft gradients
-- Dark background with vibrant accent colors (cyan, blue, purple tones)
-- Abstract tech elements (nodes, circuits, waves, geometric shapes)
-- Do NOT include any text, logos, or watermarks in the image
-- Cinematic lighting with depth of field
-- 16:9 aspect ratio composition
-- Should feel like a premium tech publication cover image"""
+    image_prompt = (
+        f"Generate a premium, modern blog featured image for an article titled: "
+        f'"{article_title}". '
+        f"{'Tool/Brand: ' + tool_name + '. ' if tool_name else ''}"
+        f"Style: Clean, professional tech blog aesthetic with dark background, "
+        f"vibrant cyan/blue/purple accent gradients, abstract 3D tech elements "
+        f"(nodes, circuits, geometric shapes), cinematic lighting. "
+        f"Do NOT include any text, logos, or watermarks. 16:9 composition."
+    )
 
     try:
-        response = client.models.generate_images(
-            model=config.GEMINI_IMAGE_MODEL,
-            prompt=image_prompt,
-            config=types.GenerateImagesConfig(
-                number_of_images=1,
-                aspect_ratio="16:9",
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=image_prompt,
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE", "TEXT"],
             ),
         )
 
-        if response.generated_images:
-            image_data = response.generated_images[0].image
-            if image_data and image_data.image_bytes:
-                logger.info(f"Generated featured image for: {article_title}")
-                return image_data.image_bytes
+        # Extract image from response parts
+        if response.candidates:
+            for part in response.candidates[0].content.parts:
+                if part.inline_data and part.inline_data.mime_type.startswith("image/"):
+                    logger.info(f"Generated featured image for: {article_title}")
+                    return part.inline_data.data
 
-        logger.warning("Imagen returned no images.")
+        logger.warning("Gemini returned no image in response.")
         return None
 
     except Exception as e:
@@ -74,16 +68,11 @@ async def get_inline_images(
     topic: str,
     count: int = 3,
 ) -> list[dict]:
-    """Get royalty-free stock images from Unsplash for in-article use.
-    
-    Returns list of dicts with keys: url, alt, credit, credit_url
-    """
+    """Get royalty-free stock images from Unsplash for in-article use."""
     images = await unsplash.search_images(topic, count=count)
-
     if not images:
         logger.info(f"No Unsplash images found for '{topic}'. Using empty list.")
         return []
-
     return images
 
 

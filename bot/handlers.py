@@ -325,6 +325,27 @@ async def cmd_drafts(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ── Inline Button Callbacks ───────────────────────────────────────────
 
+async def _smart_edit_message(query, text: str, reply_markup=None):
+    """Edit a message's caption (if photo) or text (if plain text).
+    Handles the 'There is no caption in the message to edit' error.
+    """
+    try:
+        await query.edit_message_caption(
+            caption=text,
+            parse_mode=ParseMode.MARKDOWN,
+            reply_markup=reply_markup,
+        )
+    except Exception:
+        try:
+            await query.edit_message_text(
+                text=text,
+                parse_mode=ParseMode.MARKDOWN,
+                reply_markup=reply_markup,
+            )
+        except Exception as e:
+            logger.error(f"Failed to edit message: {e}")
+
+
 async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle inline keyboard button presses."""
     query = update.callback_query
@@ -352,10 +373,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data.startswith("confirm_delete:"):
         draft_id = data.split(":")[1]
         _remove_draft(draft_id)
-        await query.edit_message_caption(
-            caption=f"🗑️ Draft `{draft_id}` deleted.",
-            parse_mode=ParseMode.MARKDOWN,
-        )
+        await _smart_edit_message(query, f"🗑️ Draft `{draft_id}` deleted.")
 
     elif data.startswith("cancel:"):
         draft_id = data.split(":")[1]
@@ -366,11 +384,10 @@ async def _do_publish(query, draft_id: str):
     """Publish a draft to WordPress."""
     draft = _get_draft(draft_id)
     if not draft:
-        await query.edit_message_caption(
-            caption=f"❌ Draft `{draft_id}` not found.",
-            parse_mode=ParseMode.MARKDOWN,
-        )
+        await _smart_edit_message(query, f"❌ Draft `{draft_id}` not found.")
         return
+
+    await _smart_edit_message(query, f"⏳ Publishing `{draft_id}` to WordPress...")
 
     # Upload featured image if available
     featured_media_id = None
@@ -389,7 +406,6 @@ async def _do_publish(query, draft_id: str):
     content_html = draft["content_html"]
     if draft.get("inline_images"):
         inline_html = image_gen.build_image_html(draft["inline_images"])
-        # Insert inline images after the first </h2> tag
         import re
         parts = re.split(r"(</h2>)", content_html, maxsplit=1)
         if len(parts) >= 3:
@@ -410,30 +426,24 @@ async def _do_publish(query, draft_id: str):
     )
 
     if not post:
-        await query.edit_message_caption(
-            caption=f"❌ Failed to publish draft `{draft_id}` to WordPress.",
-            parse_mode=ParseMode.MARKDOWN,
-        )
+        await _smart_edit_message(query, f"❌ Failed to publish draft `{draft_id}` to WordPress.")
         return
 
     # Track for affiliate backfill if needed
     tool_slug = draft.get("tool_slug", "")
     if tool_slug and draft.get("affiliate_url") == draft.get("tool_url"):
-        # Affiliate link not yet mapped — record for later backfill
         wp.add_pending_affiliate(tool_slug, post["id"])
 
     # Remove from drafts
     _remove_draft(draft_id)
 
     post_url = post.get("link", f"https://dailyaifinder.com/?p={post['id']}")
-    await query.edit_message_caption(
-        caption=(
-            f"🚀 **Published!**\n\n"
-            f"📰 **{draft['title']}**\n"
-            f"🔗 {post_url}\n"
-            f"📊 Post ID: `{post['id']}`"
-        ),
-        parse_mode=ParseMode.MARKDOWN,
+    await _smart_edit_message(
+        query,
+        f"🚀 **Published!**\n\n"
+        f"📰 **{draft['title']}**\n"
+        f"🔗 {post_url}\n"
+        f"📊 Post ID: `{post['id']}`",
     )
 
 
