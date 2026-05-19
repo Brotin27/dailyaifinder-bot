@@ -29,7 +29,7 @@ WP_APP_PASSWORD = os.getenv("WP_APP_PASSWORD", "")
 # ── Google Gemini ──────────────────────────────────────────────────────
 # Primary AI model for content generation
 GEMINI_DEFAULT_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-GEMINI_IMAGE_MODEL = os.getenv("GEMINI_IMAGE_MODEL", "imagen-3.0-generate-002")
+GEMINI_IMAGE_MODEL = os.getenv("GEMINI_IMAGE_MODEL", "imagen-4.0-fast-generate-001")
 
 # ── Unsplash ───────────────────────────────────────────────────────────
 UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY", "")
